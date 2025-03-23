@@ -42,7 +42,7 @@
 
 /*P-4
  
-    int arr[3] = {10,20,30};
+    int arr[3] = {40,20,30};
 
     //printf("arr[0] = %d\n", *(arr+0));
     //printf("arr[1] = %d\n", *(arr+1));
