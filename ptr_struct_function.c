@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_USERS 3
+#define MAX_USERS 50
 
-/*#include "ptr_struct_function.h"*/
+#include "ptr_struct_function.h"
 
-
+/*
 typedef struct Person_own {
     char *name;
     int age;
@@ -18,7 +18,7 @@ typedef struct Person_user {
     int age;
     Other *other_ptr;
 } User;
-
+*/
 
 
 static User user;
@@ -102,7 +102,7 @@ void test_2 () {
     printf("[test2]:change age: %s, %d\n",user.other_ptr->name, user.other_ptr->age);
 } 
 
-
+/*
 int main () {
     
     input();
@@ -112,4 +112,4 @@ int main () {
     how_much_people();
     people_list();
 
-}    
+} */   
