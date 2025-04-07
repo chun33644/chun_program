@@ -13,15 +13,66 @@ typedef struct {
 
 
 
+
+DynamicArray *init_ptr (int init_size) {
+
+    if (init_size <= 0){
+        printf("Invalid size or initialized!\n");
+        return NULL;
+    }
+
+
+    //dynamically allovated structures
+    DynamicArray *arr = (DynamicArray *)malloc(sizeof(DynamicArray));
+    if (arr == NULL) {
+        printf("Memory allocation for DynamicArray failed!\n");
+        return NULL;
+    }
+
+    //if memory has been allicated, release the allocated memory first.
+    if (arr->is_allocated) {
+        free(arr->ptr_arr);
+        arr->ptr_arr = NULL;
+        free(arr);
+        arr = NULL;
+        arr->is_allocated = false;
+        printf("Old memory ha been freed!\n");
+    }
+
+
+    //initial structure 
+    arr->size = 0;
+    arr->capacity = init_size;
+    arr->ptr_arr = NULL;
+
+    //allocated memory
+    arr->ptr_arr = (int *)calloc(arr->capacity, sizeof(int));
+    if (arr->ptr_arr == NULL) {
+        printf("Memory allocation failed!\n");
+        return NULL;
+    }
+
+    arr->is_allocated = true;
+    return arr;
+
+}
+
+
+
 //-----initial arr size------
 int init_arr (DynamicArray *arr, int init_size) {
+
+    if (arr == NULL) {
+        printf("Invalid * \n");
+        return -1;
+    }
+
 
     if (arr->is_allocated) {
         printf("Memory already allocated! Please free memory.\n");
         return -1;
     }
-    
-    arr->is_allocated = true;
+
     arr->size = 0;
     arr->capacity = init_size;
     arr->ptr_arr = (int *)calloc(arr->capacity, sizeof(int));
@@ -29,27 +80,29 @@ int init_arr (DynamicArray *arr, int init_size) {
         printf("Memory allocation failed!\n");
         return -1;
     }
-
+    
+    arr->is_allocated = true;
+    return 0;
 }
 
 
 
 int add_element (DynamicArray *arr, int value) {
-    
-    if (arr->size >= arr->capacity) {
-        printf("Capacity [%d] exceeded.\n", arr->capacity);
+   
+    if (arr->is_allocated && arr->size <= arr->capacity) {
+        arr->ptr_arr[arr->size] = value;
+        arr->size ++;
+        return 0;
+    }else {
+        printf("Capacity exceeded or not free and initial.\n");
         return -1;
-    }   
-
-    arr->ptr_arr[arr->size] = value;
-    arr->size ++;
-    return 0;
+     }
 }
 
 
 void display_arr (DynamicArray *arr) {
 
-    
+
     for (int idex = 0; idex < arr->size; idex ++) {
         printf("[%d] [%d] [%d] [%p]\n", idex, arr->is_allocated, arr->ptr_arr[idex], &arr->ptr_arr[idex]);
     }
@@ -58,43 +111,93 @@ void display_arr (DynamicArray *arr) {
 
 int free_arr(DynamicArray *arr) {
 
+    if (arr == NULL){
+        return -1;
+    }
+
     if (arr->ptr_arr == NULL) {
         return -1;
     }
 
-    free(arr->ptr_arr);
-    arr->ptr_arr = NULL;
-    arr->is_allocated = false;
-    return 0;
+    if (arr->is_allocated) {
+        free(arr->ptr_arr);
+        arr->ptr_arr = NULL;
+        arr->is_allocated =false;
+        return 0;
+    } else {
+        printf("Memory already freed or not allocated.\n");
+        return -1;
+
+      }
 
 }    
 
-    
-    
+
+
 
 int main (int argc, char *argv[]) {
-    
-    DynamicArray array;
-    if (init_arr(&array,3) == -1){
+
+printf("-----------------*ptr--------------------------\n");
+
+    DynamicArray *ptr = init_ptr(2);
+    if (ptr == NULL) {
+        printf("init_ptr error\n");
+    }
+
+    add_element(ptr,20);
+    add_element(ptr,30);
+    //add_element(arr,40);
+
+    printf("*ptr address [%p], *ptr value [%p] size [%d], capacity [%d]\n", &ptr, ptr, ptr->size, ptr->capacity);
+    display_arr(ptr);
+    printf("free: %d\n", free_arr(ptr));
+    //ptr = NULL; (add to init_ptr function)
+
+    printf("----try again init----\n"); 
+    //try again init
+    ptr = init_ptr(3);
+    if (ptr == NULL) {
+        printf("again init_ptr error\n");
+    }
+    add_element(ptr,50);
+    printf("*ptr address [%p], *ptr value [%p] size [%d], capacity [%d]\n", &ptr, ptr, ptr->size, ptr->capacity);
+    display_arr(ptr);
+
+
+printf("--------------------arr-----------------------\n");
+
+    DynamicArray arr;
+    if (init_arr(&arr,3) == -1){
         printf("Initial error\n");
     }
 
-    printf("*ptr_arr of addr:%p\n", array.ptr_arr);
-    printf("ptr_arr of addr:%p\n",&array);
+    add_element(&arr,10);
+    add_element(&arr,80);
+    
+    printf("arr address [%p] size [%d], capacity [%d]\n", &arr, arr.size, arr.capacity);
+    display_arr(&arr);
+    printf("free: %d\n", free_arr(&arr));
+    add_element(&arr,99); //for test
 
-    add_element(&array,10);
-    add_element(&array,80);
-    add_element(&array,30);
-    //add_element(&array,50);
 
-    display_arr(&array);
+    printf("-----try again init-------\n");
+    if (init_arr(&arr,3) == -1) {
+        printf("again inirial error\n");
+    }
 
+    add_element(&arr,66);
+    add_element(&arr,33);
+    printf("arr address [%p] size [%d], capacity [%d]\n", &arr, arr.size, arr.capacity);
+    display_arr(&arr);
+    
+
+/*
     //init_arr(&array,5);
 
     printf("free: %d\n", free_arr(&array));
         
     printf("*ptr_arr after free of addr: %p\n", array.ptr_arr);
-    
+*/ 
 }
 
 
