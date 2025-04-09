@@ -123,11 +123,12 @@ int updateOrder (char *orderID, int newQuantity, float newPrice) {
 int deleteOrder (char *orderID) {
 
     Order *curr = orders;
-
+    Order *temp = NULL;
+/*
     while (curr != NULL) {
         
 
-        if (strcmp(curr->next->orderID, orderID) == 0) {
+        if (strcmp(curr->orderID, orderID) == 0) {
            
             Order *newHistory = malloc(sizeof(Order));
             memset(newHistory, 0, sizeof(Order));  
@@ -135,29 +136,73 @@ int deleteOrder (char *orderID) {
                 return -1;
             }
                 
-            strcpy(newHistory->orderID, curr->next->orderID);
-            strcpy(newHistory->customerName, curr->next->customerName);
-            strcpy(newHistory->productName, curr->next->productName);
-            newHistory->quantity = curr->next->quantity;
-            newHistory->price = curr->next->price;
+            strcpy(newHistory->orderID, curr->orderID);
+            strcpy(newHistory->customerName, curr->customerName);
+            strcpy(newHistory->productName, curr->productName);
+            newHistory->quantity = curr->quantity;
+            newHistory->price = curr->price;
             strcpy(newHistory->action, "deleted");
             newHistory->timestamp = time(NULL);
 
             newHistory->next = history;
             history = newHistory;
             
-            Order *temp = curr->next;
-            curr->next = temp->next;
-            
-            free(temp);
+            if (orders == curr) {
+                orders = curr->next;
+            } else {
+                temp->next = curr->next;
+            }
 
+            free(curr);
             return 0;
-
         }
 
+    temp = curr;
     curr = curr->next;
 
     }
+*/
+
+    while (curr != NULL) {
+        
+
+        if (strcmp(curr->orderID, orderID) == 0) {
+           
+            Order *newHistory = malloc(sizeof(Order));
+            memset(newHistory, 0, sizeof(Order));  
+            if (!newHistory) {
+                return -1;
+            }
+                
+            strcpy(newHistory->orderID, curr->orderID);
+            strcpy(newHistory->customerName, curr->customerName);
+            strcpy(newHistory->productName, curr->productName);
+            newHistory->quantity = curr->quantity;
+            newHistory->price = curr->price;
+            strcpy(newHistory->action, "deleted");
+            newHistory->timestamp = time(NULL);
+
+            newHistory->next = history;
+            history = newHistory;
+            
+
+            if (orders == curr) {
+                orders = curr->next;
+            } else {
+                temp->next = curr->next;
+            }
+
+            free(curr);
+            return 0;
+        
+        } else {
+            
+            temp = curr;
+            curr = curr->next;            
+        }
+
+    }
+
 
     return -1;
 }
