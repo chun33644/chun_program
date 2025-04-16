@@ -1,0 +1,12 @@
+
+/* The latest protobuf syntax version */
+syntax = "proto3";
+
+
+
+message SensorData {
+
+    float temperature = 1;
+    float humidity = 2;
+
+}
