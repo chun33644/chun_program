@@ -12,7 +12,26 @@ void print_8binary (uint8_t num) {
         printf("%d", (num >> idex) & 1);
     }
     printf("\n");
+
 }
+
+
+void print_32binary (uint32_t num) {
+
+    for (int idex = 31; idex >= 0; idex--) {
+        printf("%d", (num >> idex) & 1);
+
+        if (idex % 8 == 0 && idex != 0) {
+            printf(".");
+        }
+
+    }
+    printf("\n");
+    
+}
+
+
+
 
 #define FLAG_A 0x01 //0b00000001
 #define FLAG_B 0x02 //0b00000010
@@ -28,7 +47,7 @@ void flag_management_system_for_test () {
 // |=  -0-0-0-0-0-1-0-1
 
     flag |= (FLAG_A | FLAG_C);
-    print_binary(flag);
+    print_8binary(flag);
 
 //flag -0-0-0-0-0-1-0-1
 // B   -0-0-0-0-0-0-1-0
@@ -46,7 +65,7 @@ void flag_management_system_for_test () {
 // &=  -0-0-0-0-0-1-0-0  
     
     flag &= ~FLAG_A;
-    print_binary(flag);
+    print_8binary(flag);
 
 }
 
@@ -57,15 +76,23 @@ void confirm_network_segment_of_IPaddr () {
     uint32_t subnet_mask = (255 << 24) | (255 << 16) | (255 << 8) | 0;
     
     uint32_t network = (ip & subnet_mask);
-    printf("Network address(Hex): 0x%X\n", network);
-    printf("Network address(Dec): %u.%u.%u.%u\n", (network >> 24) & 0xFF, (network >> 16) & 0xFF, (network >> 8) & 0xFF, network & 0xFF);
+    //printf("Network address(Hex): 0x%X\n", network); 
+    printf("Network address(Bin):"); print_32binary(network);
 
-//------ broadcast address ------//
-// ~sub 00000000,00000000,00000000,11111111
-// netw   
     uint32_t broadcast = network | (~subnet_mask);
+    uint32_t start_ip = network + 1;
+    uint32_t end_ip = broadcast - 1;
+
+    //print_32binary(start_ip);
+    //print_32binary(end_ip);
+
+    
+    printf("Network address(Dec):%u.%u.%u.%u\n", (network >> 24) & 0xFF, (network >> 16) & 0xFF, (network >> 8) & 0xFF, network & 0xFF);
+
+    printf("Valid network address(Dec):%u.%u.%u.%u ~ %u.%u.%u.%u\n", (start_ip >> 24) & 0xFF, (start_ip >> 16) & 0xFF, (start_ip >> 8) & 0xFf, start_ip & 0xFF, (end_ip >> 24) & 0xFF, (end_ip >> 16) & 0xFF, (end_ip >> 8) & 0xFf, end_ip & 0xFf);
 
 
+    return;
 
 }
 
